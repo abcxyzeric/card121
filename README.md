@@ -9,6 +9,10 @@ Bản dịch tiếng Việt hoàn chỉnh cho giao diện Trung tâm Điều khi
 ## 2. Liên kết CDN jsDelivr
 Để tích hợp vào Tavern Helper của thẻ SillyTavern, sử dụng liên kết:
 ```javascript
+// Bản phát hành ổn định (Khuyến nghị để tránh cache cũ):
+import 'https://cdn.jsdelivr.net/gh/abcxyzeric/card121@v1.0.1/ControlCenter-v3.js';
+
+// Hoặc nhánh phát triển mới nhất:
 import 'https://cdn.jsdelivr.net/gh/abcxyzeric/card121@main/ControlCenter-v3.js';
 ```
 
