@@ -1042,6 +1042,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       } }
     }
   };
+  function mergeAlchemyExtras(cfg) { return mergeFormalConfig(cfg); }
   function mergeFormalConfig(cfg) {
     var snap = CONFIG_SNAPSHOT["Kiểm soát biến"].alchemy.recipes;
     var recipesNode = (cfg && (cfg["Kiểm soát biến"] || cfg["变量控制"])) ? ((cfg["Kiểm soát biến"] && cfg["Kiểm soát biến"].alchemy && cfg["Kiểm soát biến"].alchemy.recipes) || (cfg["变量控制"] && cfg["变量控制"].alchemy && cfg["变量控制"].alchemy.recipes)) : null;
@@ -1095,7 +1096,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       "Hệ thống": { "Lịch sử khấu trừ": '', "Tháng thẩm định cuối": '1994-05' }
     };
   }
-  var DEMO_STATE = {
+  var DEMO = {
+  // alias
+};
+  var DEMO_STATE = DEMO;
+  DEMO = {
     full: (function () {
       var d = demoBase();
       d["Tài nguyên"]["Kho đồ"] = {
@@ -1539,6 +1544,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     var r = T(config, 'Kiểm soát biến.alchemy.recipes') || T(config, '变量控制.alchemy.recipes');
     return isRecord(r) ? r : {};
   }
+  function defaultPurchasePrice(name, info) { return defaultPrice(name, info); }
   function defaultPrice(name, info) {
     // Bảng giá định sẵn ưu tiên (tải sau khi bảng giá Sách Thế Giới sẵn sàng); khi chưa cấu hình tạm dùng cận dưới khoảng hiệu năng.
     var listed = T(config, 'Kiểm soát biến.prices.Nguyên liệu.' + name) || T(config, '变量控制.prices.素材.' + name);
@@ -1929,7 +1935,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     s.append(grid);
 
     var lock = padLock();
-    if (lock.active) {
+    if (lock) {
       if (lock.locked === null) s.append(h('p', { class: 'note warn' }, 'Ứng trước đã đạt tối đa 3/3; tổng chi phí tháng kỳ này đang chờ xác thực, trạng thái khóa đang chờ xác thực.'));
       else if (lock.locked) s.append(h('p', { class: 'note warn' }, 'Ứng trước đã đạt tối đa 3/3; ngân quỹ hiện tại không vượt quá tổng chi phí tháng kỳ này ' + fmtMoney(lock.fees) + ', hoạt động tiếp tục bị khóa.'));
       else s.append(h('p', { class: 'note' }, 'Ứng trước đã đạt tối đa 3/3; ngân quỹ hiện tại cao hơn tổng chi phí tháng kỳ này ' + fmtMoney(lock.fees) + ', khóa đã giải trừ; các việc dừng hoạt động đã diễn ra không bị ảnh hưởng.'));
@@ -1944,7 +1950,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     else {
       Object.keys(fees).forEach(function (name) {
         var f = fees[name]; if (!isRecord(f)) { fb.append(h('p', { class: 'diag' }, name + ': Định dạng mục bất thường.')); return; }
-        var head = feeHead(f);
+        var head = feeHead(name, f);
         fb.append(h('p', { class: 'fee-line' }, h('b', null, name),
           h('span', { class: 'fee-sub' }, (f['Thời hạn'] || f.期限 ? 'Thời hạn ' + (f['Thời hạn'] || f.期限) + ' · ' : '') + 'Đơn giá ' + (f['Đơn giá'] !== undefined ? fmtMoney(f['Đơn giá']) : (f.单价 !== undefined ? fmtMoney(f.单价) : '—')) + ' / người'),
           h('b', { class: head == null ? 'diag' : 'num' }, head == null ? 'Số người tính phí cần xác thực' : fmtMoney(head))));
